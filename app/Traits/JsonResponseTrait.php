@@ -17,7 +17,7 @@ trait JsonResponseTrait
 
     protected function errorResponse($message = 'Error', $statusCode = 400, $data = [])
     {
-        if($statusCode == 422) {
+        if($statusCode == 400) {
             $transformedData = [];
             foreach ($data as $key => $value) {
                 $transformedData[$key] = reset($value);
