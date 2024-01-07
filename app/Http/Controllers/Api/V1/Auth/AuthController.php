@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api\V1\Auth;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\AuthLoginRequest;
 use App\Http\Requests\Api\V1\Auth\AuthRegisterRequest;
 use App\Models\User;
 use App\Traits\JsonResponseTrait;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use JWTAuth;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
