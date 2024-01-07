@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserUpdateRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,10 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => 'nullable|string',
-            'email'         => 'nullable|email|unique:users',
-            'username'      => 'nullable|string|unique:users,username',
-            'password'      => 'nullable|string|min:6|max:50'
+            'name'          => 'required|string',
+            'email'         => 'required|email|unique:users',
+            'username'      => 'required|string|unique:users,username',
+            'password'      => 'required|string|min:6|max:50'
         ];
     }
 }

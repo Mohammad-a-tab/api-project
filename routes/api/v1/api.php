@@ -21,6 +21,15 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('logout', [AuthController::class, 'logout']);
+
     Route::get('get_user', [AuthController::class, 'get_user']);
-    Route::get('user', [UserController::class, 'show'])->middleware('permission:show user');
+
+    Route::get('user', [UserController::class, 'show'])
+        ->middleware('permission:show user');
+
+    Route::patch('user/update/{user}', [UserController::class, 'update'])
+        ->middleware('permission:update user');
+
+    Route::post('user/create', [UserController::class, 'store'])
+        ->middleware('permission:create user');
 });

@@ -2,63 +2,79 @@
 
 namespace App\Http\Controllers\Api\V1\User;
 
+use App\Http\Requests\Api\V1\User\UserStoreRequest;
+use App\Http\Requests\Api\V1\User\UserUpdateRequest;
+use App\Traits\JsonResponseTrait;
+use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
 {
+    use JsonResponseTrait;
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(UserStoreRequest $request)
     {
-        //
+        try {
+            $validatedData = $request->validated();
+
+            $validatedData['password'] = Hash::make($validatedData['password']);
+
+            User::create($validatedData);
+
+            return $this->successResponse(
+                'کاربر با موفقیت ایجاد شد',
+                null,
+                ResponseAlias::HTTP_CREATED)
+                ;
+
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'عملیات با مشکل مواجه شد',
+                $e->getCode(),
+                $e->getMessage()
+            );
+        }
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Request $request)
     {
         $user = JWTAuth::authenticate($request->bearerToken());
 
         return $user ? response()->json(['user' => $user]) : 'User Not Fount';
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        //
+        try {
+            $validatedData = $request->validated();
+
+            if(!empty($validatedData['password'])) {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }
+
+            $user->update($validatedData);
+
+            return $this->successResponse(
+                'اطلاعات کاربر با موفقیت ویرایش شد',
+                null,
+                ResponseAlias::HTTP_OK)
+                ;
+
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'عملیات با مشکل مواجه شد',
+                $e->getCode(),
+                $e->getMessage()
+            );
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
